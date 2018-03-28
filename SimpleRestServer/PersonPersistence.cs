@@ -16,7 +16,7 @@ namespace SimpleRestServer
         public PersonPersistence()
         {
             string myConnectionString;
-            myConnectionString = "server=127.0.0.1;uid=root;pwd=29AuG%1988!;database=employeedb";
+            myConnectionString = "server=108.167.172.114;uid=maurmair_moxAdm;pwd=RandomPw!;database=maurmair_moxDb";
             try
             {
                 conn = new MySql.Data.MySqlClient.MySqlConnection();
@@ -88,6 +88,51 @@ namespace SimpleRestServer
             }
             return personArray;
 
+        }
+
+        public bool deletePerson(long ID)
+        {
+            Person p = new Person();
+            MySql.Data.MySqlClient.MySqlDataReader mySqlReader = null;
+
+            String sqlString = "SELECT * FROM tblpersonnel WHERE ID = " + ID.ToString();
+            MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlString, conn);
+            mySqlReader = cmd.ExecuteReader();
+            if (mySqlReader.Read())
+            {
+                mySqlReader.Close();
+                sqlString = "DELETE FROM tblpersonnel WHERE ID = " + ID.ToString();
+                cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlString, conn);
+
+                cmd.ExecuteNonQuery();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool updatePerson(long ID, Person personToSave)
+        {
+            MySql.Data.MySqlClient.MySqlDataReader mySqlReader = null;
+
+            String sqlString = "SELECT * FROM tblpersonnel WHERE ID = " + ID.ToString();
+            MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlString, conn);
+            mySqlReader = cmd.ExecuteReader();
+            if (mySqlReader.Read())
+            {
+
+                mySqlReader.Close();
+                sqlString = "UPDATE tblpersonnel SET FirstName='" + personToSave.FirstName + "', LastName='" + personToSave.LastName + "', PayRate=" + personToSave.PayRate + ", StartDate='" + personToSave.StartDate.ToString("yyyy-MM-dd HH:mm:ss") + "', EndDate='" + personToSave.EndDate.ToString("yyyy-MM-dd HH:mm:ss") + "' WHERE ID = " + ID.ToString();
+                cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlString, conn);
+                cmd.ExecuteNonQuery();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

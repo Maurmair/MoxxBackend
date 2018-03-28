@@ -23,12 +23,6 @@ namespace SimpleRestServer.Controllers
         {
             PersonPersistence pp = new PersonPersistence();
             Person person = pp.getPerson(id);
-            /*person.ID = id;
-            person.LastName = "Smith";
-            person.FirstName = "John";
-            person.PayRate = "45.54";
-            person.StartDate = DateTime.Parse("5/5/1990");
-            person.EndDate = DateTime.Parse("1/1/2000");*/
             return person;
         }
 
@@ -45,13 +39,40 @@ namespace SimpleRestServer.Controllers
         }
 
         // PUT: api/Person/5
-        public void Put(int id, [FromBody]string value)
+        public HttpResponseMessage Put(long id, [FromBody]Person value)
         {
+            PersonPersistence pp = new PersonPersistence();
+            bool recordExisted = false;
+            recordExisted = pp.updatePerson(id, value);
+            HttpResponseMessage response;
+            if (recordExisted)
+            {
+                response = Request.CreateResponse(HttpStatusCode.NoContent);
+            }
+            else
+            {
+                response = Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+            return response;
+
         }
 
         // DELETE: api/Person/5
-        public void Delete(int id)
+        public HttpResponseMessage Delete(long id)
         {
+            PersonPersistence pp = new PersonPersistence();
+            bool recordExisted = false;
+            recordExisted = pp.deletePerson(id);
+            HttpResponseMessage response;
+            if (recordExisted)
+            {
+                response = Request.CreateResponse(HttpStatusCode.NoContent);
+            }
+            else
+            {
+                response = Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+            return response;
         }
     }
 }
