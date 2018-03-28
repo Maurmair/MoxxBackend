@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace SimpleRestServer
         public PersonPersistence()
         {
             string myConnectionString;
-            myConnectionString = "server=127.0.0.1;uid=root;pwd=RandomPw!;database=employeedb";
+            myConnectionString = "server=127.0.0.1;uid=root;pwd=29AuG%1988!;database=employeedb";
             try
             {
                 conn = new MySql.Data.MySqlClient.MySqlConnection();
@@ -64,6 +65,29 @@ namespace SimpleRestServer
             {
                 return null;
             }
+        }
+
+        public ArrayList getPersons()
+        {
+
+            ArrayList personArray = new ArrayList();
+            MySql.Data.MySqlClient.MySqlDataReader mySqlReader = null;
+            String sqlString = "SELECT * FROM tblpersonnel";
+            MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand(sqlString, conn);
+            mySqlReader = cmd.ExecuteReader();
+            while  (mySqlReader.Read())
+            {
+                Person p = new Person();
+                p.ID = mySqlReader.GetInt32(0);
+                p.FirstName = mySqlReader.GetString(1);
+                p.LastName = mySqlReader.GetString(2);
+                p.PayRate = mySqlReader.GetString(3);
+                p.StartDate = mySqlReader.GetDateTime(4);
+                p.EndDate = mySqlReader.GetDateTime(5);
+                personArray.Add(p);
+            }
+            return personArray;
+
         }
     }
 }
